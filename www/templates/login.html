@@ -1,0 +1,25 @@
+<ion-view class="has-bg">
+	<ion-nav-bar class="bar-transparent nav-title-slide-ios7">
+	  	<h1 class="title">Inicia sesión</h1>
+	</ion-nav-bar>
+	<ion-content class="has-header">
+		<div class="spacer" style="width: 300px; height: 140px;"></div>
+		<div class="row">
+			<div class="col">
+				<form ng-submit="login(loginData)">
+					<div class="list list-inset">
+		    			<label class="item item-input">
+			    			<input type="text" ng-model="loginData.username" placeholder="Usuario" />
+			  			</label>
+			  			<label class="item item-input">
+			    			<input type="password" ng-model="loginData.password" placeholder="Contraseña" />
+			  			</label>
+					</div>
+					<div class="col">
+						<button class="button button-block button-balanced" type="submit">Inicia sesión</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>
