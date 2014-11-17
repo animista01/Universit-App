@@ -1,29 +1,28 @@
-<ion-view title="Tareas">
-	<ion-pane ng-controller="HomeCtrl" no-scroll>
+<ion-view title="Tus tareas">
+	<ion-pane ng-init="load()" ng-controller="HomeCtrl" no-scroll>
 		<ion-nav-buttons side="left">
 		    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
 	  	</ion-nav-buttons>
 	    <ion-header-bar>
 		    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-	        <h1 class="title">Tareas</h1>
 	  	</ion-header-bar>
+
 	    <swipe-cards>
 	    	<swipe-card on-card-swipe="cardSwiped()" id="start-card">
-	    		Swipe hacia abajo para ver una nueva tarjeta
+	    		Swipe hacia abajo para ver una nueva tarea
 	      	</swipe-card>
 
 	      	<swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)">
 	        	<div class="title">
-	            	{{card.title}}
+	            	<p>{{card.title}}</p>
 	          	</div>
 	          	<div class="image">
-	            	<img ng-src="{{card.image}}">
+	            	<img class="image-logo" src="img/unisimon.jpg">
 	          	</div>
 	          	<div class="button-bar">
-		          <a class="button button-clear icon ion-plus button-positive" href="#/app/home/detail"> Mas info</a>
+		          <a class="button button-clear icon ion-plus button-positive" ng-click="moreInfo(card._id)"> Más info</a>
 		    	</div>
 	      </swipe-card>
-
 	    </swipe-cards>
 	</ion-pane>
 </ion-view>

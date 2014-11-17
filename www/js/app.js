@@ -59,11 +59,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     })
     .state('app.detail', {
-      url: "/home/detail",
+      url: "/home/detail/:tareaId",
       views: {
         'menuContent' :{
           templateUrl: "templates/detail.html",
-          controller: 'HomeCtrl'
+          controller: 'HomeworkDetailCtrl'
         }
       }
     })

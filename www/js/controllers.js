@@ -1,10 +1,10 @@
 angular.module('starter.controllers', [])
 
-.controller('LoginCtrl', function ($scope, $ionicLoading, LoginService, $ionicViewService, $state){
+.controller('LoginCtrl', function ($scope, $ionicLoading, AppServices, $ionicViewService, $state){
   $scope.login = function (loginData){
     if(loginData.username && loginData.password){
       $ionicLoading.show({template: '<i class="icon ion-looping"></i>'});
-      var result = LoginService.login(loginData.username, loginData.password);
+      var result = AppServices.login(loginData.username, loginData.password);
       result.then(function (data){
         if(data.status == 401){
           $ionicLoading.show({template: '<i class="icon ion-close-round"></i><p>'+data.message+'</p>', duration: 2500, showBackdrop: false});
@@ -37,17 +37,25 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('HomeCtrl', function ($scope, $ionicLoading, $cordovaSocialSharing){
-  // $ionicLoading.show({template: '<i class="icon ion-looping"></i>'});
-  var cardTypes = [
-    { id_promo: 1, title: 'Desarrollar el mockup. De electiva', image: 'img/unisimon.jpg' },
-    { id_promo: 2, title: 'Tarea 2', image: 'img/unisimon.jpg' },
-    { id_promo: 3, title: 'OJO con la tarea 3', image: 'img/unisimon.jpg' },
-    { id_promo: 4, title: 'Tarea 4', image: 'img/unisimon.jpg' },
-    { id_promo: 5, title: 'Tarea 5', image: 'img/unisimon.jpg' }
-  ];
+.controller('HomeCtrl', function ($scope, $state, AppServices, $ionicLoading){
+  $ionicLoading.show({template: '<i class="icon ion-looping"></i><p>Trayendo las tareas...</p>'});
+  token = localStorage.getItem("token");
+  $scope.load = function (){
+    var result = AppServices.getHomeworks(token);
+    result.then(function (data){
+      if(data.status == 401){
+        $ionicLoading.show({template: '<i class="icon ion-close-round"></i><p>'+data.message+'</p>', duration: 2500, showBackdrop: false});
+      }else{
+        $scope.homeworks = data.homeworks;
+        console.log($scope.homeworks)
+        $scope.cards = Array.prototype.slice.call($scope.homeworks, 0, 0);
+        $ionicLoading.hide();
+      }
+    }, function (err){
+      $ionicLoading.show({template: '<p>Algo salió mal</p>', duration: 1500, showBackdrop: false});
+    });
+  }
 
-  $scope.cards = Array.prototype.slice.call(cardTypes, 0, 0);
   $scope.cardSwiped = function (index){
     $scope.addCard();
   };
@@ -55,16 +63,41 @@ angular.module('starter.controllers', [])
     $scope.cards.splice(index, 1);
   }
   $scope.addCard = function(){
-    var newCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+    var newCard = $scope.homeworks[Math.floor(Math.random() * $scope.homeworks.length)];
     newCard.id = Math.random();
     $scope.cards.push(angular.extend({}, newCard));
   }
 
-  $scope.reminder = function (tarea_id){
-    
+  $scope.moreInfo = function (tarea_id){
+    $state.go('app.detail', {"tareaId": tarea_id});
   }
-  $scope.share = function (tarea_id){
-    $cordovaSocialSharing.share("Ojo con esta tarea", null, null, "http://www.unisimon.edu.co/")
+})
+
+.controller('HomeworkDetailCtrl', function ($scope, AppServices, $ionicLoading, $cordovaSocialSharing, $cordovaLocalNotification, $stateParams){
+  $ionicLoading.show({template: '<i class="icon ion-looping"></i>'});
+  $scope.init = function (){
+    var result = AppServices.getOne($stateParams.tareaId);
+    result.then(function (data){
+      $scope.homeworkDetail = data;
+      $ionicLoading.hide();
+    }, function (err){
+      $ionicLoading.show({template: '<p>Algo salió mal</p>', duration: 1500, showBackdrop: false});
+    });
+  }
+  $scope.reminder = function (tarea_id, message){
+    var d = new Date();
+    d.setHours(20); 
+    $cordovaLocalNotification.add({
+      id: tarea_id,
+      title: "Recordatorio de tarea",
+      message: message,
+      date: d,
+    }).then(function (){
+      console.log('callback for adding background notification');
+    });
+  }
+  $scope.share = function (tarea_url){
+    $cordovaSocialSharing.share("Ojo con esta tarea", null, null, tarea_url)
     .then(
         function (result){
       },
@@ -73,9 +106,10 @@ angular.module('starter.controllers', [])
       }
     );
   }
-  $scope.openIn = function (tarea_id){
-    
+  $scope.openIn = function (tarea_url){
+    var ref = window.open(tarea_url, '_blank');
   }
+
 })
 
 .controller('ProfileCtrl', function ($scope){

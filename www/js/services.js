@@ -1,8 +1,7 @@
 angular.module('starter.services', [])
 
-.service('LoginService', function ($q, $http){
+.service('AppServices', function ($q, $http, $rootScope){
   $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-  var token = localStorage.getItem("token");
   return{
     login: function (username, password){
       var defer = $q.defer();
@@ -24,7 +23,7 @@ angular.module('starter.services', [])
       });      
       return defer.promise;
     },
-    getHomeworks: function (){
+    getHomeworks: function (token){
       var defer = $q.defer();
       var xsrf = { token: token };
       $http({
@@ -38,10 +37,16 @@ angular.module('starter.services', [])
         },
         data: xsrf
       }).success(function (data){
+        $rootScope.tareas = data;
         defer.resolve(data);
       }).error(function (err){
        defer.reject(err);
       });      
+      return defer.promise;
+    },
+    getOne: function (tareaId){
+      var defer = $q.defer();
+      defer.resolve($rootScope.tareas.homeworks[tareaId]);
       return defer.promise;
     }
   } 

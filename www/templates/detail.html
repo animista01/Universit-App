@@ -1,17 +1,20 @@
-<ion-view title="Detalle">
-	<ion-content class="padding">
+<ion-view ng-init="init()" title="Detalle">
+	<ion-content class="padding" scroll="true">
       	<div class="list card">
 	        <div class="item item-body itempadding">
+    			<p>{{homeworkDetail.title}}</p>
+    			<p>De: {{homeworkDetail.asignature}}</p>
+    			<p>Hasta: {{homeworkDetail.end_date}}</p>
 	        	<div class="button-bar bar-light spot-actions">
-		            <a class="button" ng-click="reminder(detail.p_id)">
+		            <a class="button" ng-click="reminder(homeworkDetail._id, homeworkDetail.title)">
 		            	<i class="icon ion-ios7-bell-outline"></i>
 		            	<span class="textCard">Recordar</span>
 		            </a>
-		            <button class="button" ng-click="share(detail.p_id)">
+		            <button class="button" ng-click="share(homeworkDetail.url)">
 		            	<i class="icon ion-share"></i>
 		            	<span class="textCard">Compartir</span>
 		            </button>
-		            <a class="button" ng-click="openIn()">
+		            <a class="button" ng-click="openIn(homeworkDetail.url)">
 		            	<i class="icon ion-earth"></i>
 		            	<span class="textCard">Abrir</span>
 	            	</a>

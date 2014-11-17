@@ -15,6 +15,8 @@
   <preference name="SplashScreen" value="screen"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="BackupWebStorage" value="none"/>
+  <preference name="AndroidLaunchMode" value="singleInstance"/>
+  
   <platform name="android">
     <icon src="icons/android/icon-36-ldpi.png" density="ldpi"/>
     <icon src="icons/android/icon-48-mdpi.png" density="mdpi"/>
