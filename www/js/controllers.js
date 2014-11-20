@@ -37,35 +37,41 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('HomeCtrl', function ($scope, $state, AppServices, $ionicLoading){
-  $ionicLoading.show({template: '<i class="icon ion-looping"></i><p>Trayendo las tareas...</p>'});
+.controller('HomeCtrl', function ($scope, $rootScope, $state, AppServices, $ionicLoading){
   token = localStorage.getItem("token");
   $scope.load = function (){
-    var result = AppServices.getHomeworks(token);
-    result.then(function (data){
-      if(data.status == 401){
-        $ionicLoading.show({template: '<i class="icon ion-close-round"></i><p>'+data.message+'</p>', duration: 2500, showBackdrop: false});
-      }else{
-        $scope.homeworks = data.homeworks;
-        console.log($scope.homeworks)
-        $scope.cards = Array.prototype.slice.call($scope.homeworks, 0, 0);
-        $ionicLoading.hide();
-      }
-    }, function (err){
-      $ionicLoading.show({template: '<p>Algo salió mal</p>', duration: 1500, showBackdrop: false});
-    });
+    if(typeof $rootScope.homeworks === 'undefined'){
+      $ionicLoading.show({template: '<i class="icon ion-looping"></i><p>Trayendo las tareas...</p>'});
+      var result = AppServices.getHomeworks(token);
+      result.then(function (data){
+        if(data.status == 401){
+          $ionicLoading.show({template: '<i class="icon ion-close-round"></i><p>'+data.message+'</p>', duration: 2500, showBackdrop: false});
+        }else{
+          $rootScope.name = data.name;
+          $rootScope.homeworks = data.homeworks;
+          $rootScope.cards = Array.prototype.slice.call($rootScope.homeworks, 0, 0);
+          $ionicLoading.hide();
+        }
+      }, function (err){
+        $ionicLoading.show({template: '<p>Algo salió mal</p>', duration: 1500, showBackdrop: false});
+      });
+    }else{
+      $scope.data = {
+        hide: false
+      };  
+    }
   }
 
   $scope.cardSwiped = function (index){
     $scope.addCard();
   };
   $scope.cardDestroyed = function (index){
-    $scope.cards.splice(index, 1);
+    $rootScope.cards.splice(index, 1);
   }
   $scope.addCard = function(){
-    var newCard = $scope.homeworks[Math.floor(Math.random() * $scope.homeworks.length)];
+    var newCard = $rootScope.homeworks[Math.floor(Math.random() * $rootScope.homeworks.length)];
     newCard.id = Math.random();
-    $scope.cards.push(angular.extend({}, newCard));
+    $rootScope.cards.push(angular.extend({}, newCard));
   }
 
   $scope.moreInfo = function (tarea_id){

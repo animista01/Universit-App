@@ -8,7 +8,7 @@
 	  	</ion-header-bar>
 
 	    <swipe-cards>
-	    	<swipe-card on-card-swipe="cardSwiped()" id="start-card">
+	    	<swipe-card ng-hide="data.hide == false" on-card-swipe="cardSwiped()" id="start-card">
 	    		Swipe hacia abajo para ver una nueva tarea
 	      	</swipe-card>
 
