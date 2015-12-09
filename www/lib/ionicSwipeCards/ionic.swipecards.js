@@ -58,7 +58,6 @@
 
       // Calculate the top left of a default card, as a translated pos
       var topLeft = window.innerHeight / 2 - this.maxHeight/2;
-      console.log(window.innerHeight, this.maxHeight);
 
       var cardOffset = Math.min(this.cards.length, 3) * 5;
 
@@ -235,11 +234,9 @@
       var width = this.el.offsetWidth;
       var point = window.innerWidth / 2 + this.rotationDirection * (width / 2)
       var distance = Math.abs(point - e.gesture.touches[0].pageX);// - window.innerWidth/2);
-      console.log(distance);
 
       this.touchDistance = distance * 10;
 
-      console.log('Touch distance', this.touchDistance);//this.touchDistance, width);
     },
 
     _doDrag: function(e) {
@@ -268,35 +265,32 @@
       restrict: 'E',
       template: '<div class="swipe-card" ng-transclude></div>',
       require: '^swipeCards',
-      replace: true,
       transclude: true,
       scope: {
         onCardSwipe: '&',
         onDestroy: '&'
       },
-      compile: function(element, attr) {
-        return function($scope, $element, $attr, swipeCards) {
-          var el = $element[0];
+      link: function($scope, $element, $attr, swipeCards) {
+        var el = $element[0];
 
-          // Instantiate our card view
-          var swipeableCard = new SwipeableCardView({
-            el: el,
-            onSwipe: function() {
-              $timeout(function() {
-                $scope.onCardSwipe();
-              });
-            },
-            onDestroy: function() {
-              $timeout(function() {
-                $scope.onDestroy();
-              });
-            },
-          });
-          $scope.$parent.swipeCard = swipeableCard;
+        // Instantiate our card view
+        var swipeableCard = new SwipeableCardView({
+          el: el,
+          onSwipe: function() {
+            $timeout(function() {
+              $scope.onCardSwipe();
+            });
+          },
+          onDestroy: function() {
+            $timeout(function() {
+              $scope.onDestroy();
+            });
+          },
+        });
+        $scope.$parent.swipeCard = swipeableCard;
 
-          swipeCards.pushCard(swipeableCard);
+        swipeCards.swipeController.pushCard(swipeableCard);
 
-        }
       }
     }
   }])
@@ -305,9 +299,8 @@
     return {
       restrict: 'E',
       template: '<div class="swipe-cards" ng-transclude></div>',
-      replace: true,
       transclude: true,
-      scope: {},
+      scope: true,
       controller: function($scope, $element) {
         var swipeController = new SwipeableCardController({
         });
@@ -316,7 +309,9 @@
           swipeController.popCard(isAnimated);
         });
 
-        return swipeController;
+        this.swipeController = swipeController;
+
+        //return swipeController;
       }
     }
   }])
@@ -326,7 +321,7 @@
       popCard: function($scope, isAnimated) {
         $rootScope.$emit('swipeCard.pop', isAnimated);
       },
-      getSwipebleCard: function($scope) {
+      getSwipeableCard: function($scope) {
         return $scope.$parent.swipeCard;
       }
     }

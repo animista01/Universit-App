@@ -8,7 +8,7 @@ angular.module('starter.services', [])
       var xsrf = { username: username, password: password };
       $http({
         method: 'POST',
-        url: 'https://universitapp.herokuapp.com/api/login',
+        url: 'http://universitapp.herokuapp.com/api/login',
         transformRequest: function (obj){
           var str = [];
           for(var p in obj)
@@ -28,7 +28,7 @@ angular.module('starter.services', [])
       var xsrf = { token: token };
       $http({
         method: 'POST',
-        url: 'https://universitapp.herokuapp.com/api/homeworks',
+        url: 'http://universitapp.herokuapp.com/api/homeworks',
         transformRequest: function (obj){
           var str = [];
           for(var p in obj)
@@ -47,6 +47,18 @@ angular.module('starter.services', [])
     getOne: function (tareaId){
       var defer = $q.defer();
       defer.resolve($rootScope.tareas.homeworks[tareaId]);
+      return defer.promise;
+    },
+    deleteMe: function (student_id){
+      var defer = $q.defer(); 
+      $http({
+        method: 'GET',
+        url: 'http://universitapp.herokuapp.com/api/users/'+student_id+''
+      }).success(function (data){
+        defer.resolve(data);
+      }).error(function (err){
+       defer.reject(err);
+      });      
       return defer.promise;
     }
   } 

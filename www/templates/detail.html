@@ -2,12 +2,12 @@
 	<ion-content class="padding" scroll="true">
       	<div class="list card">
 	        <div class="item item-body itempadding">
-    			<p>{{homeworkDetail.title}}</p>
-    			<p>De: {{homeworkDetail.asignature}}</p>
-    			<p>Hasta: {{homeworkDetail.end_date}}</p>
+    			<p style="text-align: right;"><b>Hasta: </b>{{homeworkDetail.end_date}}</p>
+    			<p style="text-align: justify;">{{homeworkDetail.title}}</p>
+    			<p><b>De: </b>{{homeworkDetail.asignature}}</p>
 	        	<div class="button-bar bar-light spot-actions">
 		            <a class="button" ng-click="reminder(homeworkDetail._id, homeworkDetail.title)">
-		            	<i class="icon ion-ios7-bell-outline"></i>
+		            	<i class="icon ion-ios-bell-outline"></i>
 		            	<span class="textCard">Recordar</span>
 		            </a>
 		            <button class="button" ng-click="share(homeworkDetail.url)">

@@ -25,7 +25,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     }
     var connectionIs = checkConnection();
-    if (connectionIs == 'No network connection'){
+    if(connectionIs == 'No network connection'){
       console.log('crysavvy');
     }
 
